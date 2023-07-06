@@ -1,0 +1,24 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap');
+
+html{
+    font-size: 18px;
+    
+}
+
+body{
+    font-family:'Crimson Text', serif;
+}
+
+a{
+    text-decoration: none;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    object-position: top;
+    height: 80vh;
+    overflow:hidden;
+
+}
+

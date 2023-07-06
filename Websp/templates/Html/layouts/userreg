@@ -1,0 +1,12 @@
+    <section class="py-5 text-center container" style="margin-top:70px;">
+        <div class="row py-lg-5">
+            <div class="col-lg col-md-8 mx-auto">
+                <h1 class="fw-light">Are U Still Waiting</h1>
+                <p class="lead text-muted">Who will win A-Z or Flipkart?</p>
+                <p>
+                    <a href="#" class="btn btn-primary my-2">Already User</a>
+                    <a href="#" class="btn btn-secondary my-2">Register</a>
+                </p>
+            </div>
+        </div>
+    </section>

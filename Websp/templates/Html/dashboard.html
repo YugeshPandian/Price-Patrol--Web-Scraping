@@ -1,0 +1,186 @@
+{% extends 'Html/layouts/main.html' %}
+{% block title %}
+Dashboard|Price-Patrol
+{% endblock title %}
+{% block content %}
+
+
+
+<div class="container" style="margin-top: 70px;">
+    <div class="row">
+      <div class="col-12"></div>
+      <div class="shadow p-3 mb-5 bg-light rounded">
+        <h1> Dashboard</h1>
+        {% include 'Html/inc/message.html' %}
+      </div>
+    </div>
+  
+    
+    
+    <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-light rounded-5 shadow-sm" id="pillNav2" role="tablist" style="--bs-nav-link-color: var(--bs-white); --bs-nav-pills-link-active-color: var(--bs-primary); --bs-nav-pills-link-active-bg: var(--bs-white);">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active rounded-5" id="home-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="true" onclick="navigateToDashboard()" >Track List</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-5" id="profile-tab2" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="navigateToMaster()" >Master List</button>
+      </li>
+      
+    </ul>
+    <script>
+      function navigateToMaster() {
+        window.location.href = "{% url 'master' %}";
+      }
+      function navigateToDashboard() {
+        window.location.href = "{% url 'dashboard' %}";
+      }
+    </script>
+    
+   
+
+
+
+    <h2>Track List</h2>
+    <table class="table table-light table-striped">
+      <tr>
+        
+          <th>Flipkart Link</th>
+          <th>Amazon Link</th>
+          <th>Threshold Price</th>
+          <th>Email id</th>
+          <th>Created at</th>
+          <th></th>
+          <th></th>
+          
+      </tr>
+      {% for item in main %}
+      <tr>
+        <td>{{ item.flipkart_url|slice:":50" }}{% if item.flipkart_url|length > 50 %}...{% endif %} <div><a href="{{ item.flipkart_url }}" target="_blank"><button id="flipkartButton" class="btn btn-info"> <i class="fab fa-foursquare"></i> Link</button></a></div>
+        </td>
+        <td>{{ item.amazon_url|slice:":50" }}{% if item.amazon_url|length > 50 %}...{% endif %}<div><a href="{{ item.amazon_url }}" target="_blank"><button id="amazonButton" class="btn btn-info"> <i class="fab fa-amazon"></i> Link</button></a></div>
+        </td>
+        <td>{{item.buyprice}}</td>
+        <td>{{item.email}}</td>
+        <td>{{item.created_at}}</td>
+        <td><a href="{% url 'wish' item.id%}" onclick="return confirm('Are u sure? to Proceed')" class="btn btn-outline-primary"><i class="fas fa-cloud-upload-alt"></i>Add to Masterlist</a></td>
+   
+        <td><a href="{% url 'remove_dash' item.id %}" onclick="return confirm('Are you sure? to Remove')" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>Remove</a></td>
+      </tr>
+      
+  
+      {% endfor %}
+
+     
+
+    
+  
+    
+      
+    </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var xhr; // Variable to store the AJAX request
+    var stopFlag = false;
+    $(document).ready(function() {
+        $('#startButton').click(function() {
+            disableButton();
+            $('#startButton').html('<i class="fas fa-spinner fa-spin"></i> Scraping...');
+            // Send an AJAX request to start the scrape
+            xhr = $.ajax({
+                url: '/scrape/',  // URL mapped to the scrape function
+                method: 'POST',  // or 'GET' depending on your requirements
+                success: function(response) {
+                    // Handle the response if needed
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    // Handle the error if needed
+                }
+            });
+        });
+
+        $('#stopButton').click(function() {
+           $.ajax({
+            url: '/stop_scrape/',
+            method: 'GET',
+
+            //enableButton()
+            
+
+           })
+            
+            
+        });
+    });
+
+    function disableButton() {
+        $('#startButton').prop('disabled', true);
+        $('#stopButton').prop('disabled', false);
+        alert("Your Request is Received . Please wait for 1 minute to process.");
+    }
+
+    function enableButton() {
+        $('#startButton').prop('disabled', false);
+        $('#stopButton').prop('disabled', true);
+    }
+</script>
+
+<label for="" class="text-center">Please ensure that your link is working properly.</label>
+
+
+<div>
+    <button id="startButton" class="btn btn-primary mb-2"><i class="fas fa-rocket"></i> Start Bargain</button>
+    <button id="stopButton" class="btn btn-danger mb-2" ><i class="fas fa-stop"></i> Stop</button>
+</div>
+<a href="#end" class="btn btn-outline-success" > <i class="fas fa-angle-double-down"> Latest Scraped Data</i> </a>
+  <label for="" class="text-center ">Note:This Website under Development, For Testing Purpose, It only Handles One Product at a time</label>
+  <div class="container" style="margin-top: 70px;">
+    <div class="row d-flex justify-content-between">
+        <div class="container" style="margin-top: 70px;">
+            <div class="row">
+                <div class="col">
+                    <h1>Observed Data</h1>
+                      </div>
+            </div>
+        </div> 
+    </div>
+  </div>  
+
+
+
+
+
+
+{% for data in scraped_data %}
+    <table class="table table-info table-striped">
+      <tr>
+        <th>Flipkart Name</th>
+        <th>Amazon Name</th>
+        <th>Flipkart Price</th>
+        <th>Amazon Price</th>
+        <th>Threshold Price</th>
+       <!-- <th class="table-warning">Status</th>-->
+        <th>Scraped At</th>
+      </tr>
+      <tr>
+        <td>{{ data.flipkart_name|slice:":30" }}{% if data.flipkart_name|length > 30 %}...{% endif %} }}</td>
+        <td>{{ data.amazon_name|slice:":30" }}{% if data.flipkart_name|length > 30 %}...{% endif %} }}</td>
+        <td>{{data.flipkart_price}}</td>
+        <td>{{data.amazon_price}}</td>
+        
+        <td>{{data.buyprice}}</td>
+       <!-- <td>{{data.status}}</td>----->
+        <td>{{data.scraped_at}}</td>
+        <!-- Display other attributes of the flipkart object here -->
+      </tr>
+    </table>
+     {% endfor %}
+     <h5 id="end">------------------------------------</h5>
+
+</div>
+  
+
+
+
+
+  
+{% endblock content %} 

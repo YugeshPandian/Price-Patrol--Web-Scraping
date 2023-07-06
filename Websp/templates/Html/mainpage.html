@@ -1,0 +1,141 @@
+{% extends 'Html/layouts/main.html' %}
+{% block title %}
+Main page|Price-Patrol
+{% endblock title %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+      background-image: url("{% static 'images/Bg.jpg' %}");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  </style>
+
+
+<style>
+    .col,
+    .col-2{
+        background-color: rgb(75, 181, 181);
+        padding: 20px;
+        border: 1px solid red;
+    }
+</style>
+<div class="container" style="margin-top: 70px;">
+    <div class="row shadow p-3 mb-5 bg-light rounded">
+            <div class="col"><h1>Flipkart</h1></div>
+            <div class="col-2"><h1>VS</h1></div>
+            <div class="col"><h1>Amazon</h1></div>
+    </div>  
+    </div>
+
+</div>
+
+
+<form method="post" action="">
+    <input type="hidden" value="{{user.id}}" id="uid">
+
+    <div class="container" style="margin-top: 70px;">
+        <div class="row d-flex justify-content-between">
+            <div class="container" style="margin-top: 70px;">
+                <div class="row">
+                    <div class="col">
+    
+                        <label for="" class="form-label">Flipkart link</label>
+                        <input type="text" name="flipkart_url" id="flipkart_url" class="form-control" placeholder="Enter URL of Flipkart">
+                    </div>
+                    <div class='col-2'></div>
+                    <div class="col">
+                        <label for="" class="form-label">Amazon link</label>
+                        <input type="text" name="amazon_url" id="amazon_url" class="form-control" placeholder="Enter URL of Amazon">
+                    </div>
+                    <div class="row">
+                        <div class="col">
+        
+                            <label for="" class="form-label">Threshold Price</label>
+                            <input type="number" name="buyprice" id="buyprice" class="form-control" placeholder="Enter Your Budget">
+                            <label for="" class="form-label">Please Provide the Reasonable price. Tip: Set 10% to 20% offer from current value </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+        
+                            <label for="" class="form-label">Email Id</label>
+                            <input type="email" name="aemail" id="aemail" class="form-control" placeholder="Enter Your Alert Email Address">
+                            <label for="" class="form-label">Please provide a valid email address.</label>
+                        </div>
+                    </div>
+
+
+                     
+                    <button type="submit" class="btn btn-primary" id="btnbargain">Add to Master_List</button>
+                </div>
+            </div>
+        </div>
+    </div>            
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        const flipkart_url = document.getElementById("flipkart_url");
+        const amazon_url = document.getElementById("amazon_url");
+        const buyprice = document.getElementById("buyprice");
+        const aemail = document.getElementById("aemail");
+        const uid = document.getElementById("uid");
+        const btnbargain = document.getElementById("btnbargain");
+
+
+        
+
+
+        btnbargain.addEventListener("click", function(event) {
+            event.preventDefault();
+            const flipkartUrlValue = flipkart_url.value;
+            const amazonUrlValue = amazon_url.value;
+            const buyPriceValue = buyprice.value;
+            const emailValue = aemail.value;
+            const uidValue = uid.value;
+            
+            if (flipkartUrlValue === '' || amazonUrlValue === '' || buyPriceValue === '' || emailValue === '') {
+                alert('Please fill all fields before submitting.');
+                return;
+            }
+
+            let postObj = {
+                flipkart_url: flipkartUrlValue,
+                amazon_url: amazonUrlValue,
+                buyprice: buyPriceValue,
+                aemail: emailValue,
+                uid: uidValue,
+            };
+
+            //console.log(postObj);
+
+            fetch("/adddash", {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-requested-with': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify(postObj)
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    //console.log(data);
+                    alert(data['status']);
+                });
+        });
+    });
+</script>
+
+
+         
+    
+
+  
+{% endblock content %}
